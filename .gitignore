@@ -1,0 +1,15 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+.idea/
+
+node_modules/
+
+build/
+
+database/
+
+.DS_Store
+
+config.json
+
+tcloud-*
