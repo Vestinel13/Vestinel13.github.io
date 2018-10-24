@@ -1,0 +1,39 @@
+notifications:
+  email: false
+language: node_js
+
+node_js:
+- '9'
+- '8'
+- '7'
+cache:
+  directories:
+  - $(pwd)/node_modules
+
+script:
+- npm run build
+- npm test
+
+after_success:
+- git reset --hard
+- cp package.json ./build
+- mv ./build tcloud-${TRAVIS_TAG}/
+- mkdir tcloud-${TRAVIS_TAG}/scripts
+- tar zcf tcloud-${TRAVIS_TAG}.tgz tcloud-${TRAVIS_TAG}/
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: Cy3WggYkznwXWikzLLmrDvUBsMMGqi9mTqTkk/DTiJMqhFSTHI/6pY5v+udhhp4f7SDCE2rbkpTfiJbhLJ4JCj1tSOl6S5RXOOgkVkQvyhro8yB52M0cW2EfncGxg1rf88gl75+nrQe0AeYayobzpRZ+R1aTPAG2BzBfvkCMBF/0as9Bin4RtRrXsnCcYNx7zb9sHru1lUbHbEcnHc+XIIz9q7DY9KHLBwSM47gJFNP1xcTVCbeHI9HmY5DBDBuR2uhSYCLPd9d5LWK64ZRdmxEmBZwxpvyGhGfyBw2Ds8iKHYzCf7Y3Segsw9Egpx3RuxV3EaFSVrr8TBO2NXndQ5hOp76k+rfiMwcehUXbX1/ocSKZaMpOX8FPOV9FSh46+QmcbsB2MobBsS9zLgyypnSVb3Q9sGKjp+HWvMG2Yih3mKka8LJVxUArHen8eFE4UH6iY4FD2vF8eOyZdBlzY/zznfwlmAZ4WpXF+QFt0VdQLMJfCvxyiJo2kVzSWcfxxz+2HN+tE/2zUmfvz8FC/kiFADrDgde4/DvH+Vm15gHU2R8BSTDryL8dEp2lAGKzKAyu/xhJZBqqNLFD6IpVDDVIUQAvGncTZXGEF3wPt0JZMBM7+jcTVbCK3sVNRmo0xZMTD4zUYIjbjyI+3/SaQRJ6CAQzSQ5SkpiuDWBafiw=
+    file: tcloud-${TRAVIS_TAG}.tgz
+    skip_cleanup: true
+    on:
+      tags: true
+
+  - provider: npm
+    email: guillaume.lunik@gmail.com
+    on:
+      tags: true
+    api_key:
+      secure: UUiny4PGlMFNNhe5vO/NOFRItop0bCFdvfWnl+3V8kLoWNF3pUOmBkt+8pAk9kQcuyJiOjM6lKgy8E6Q4G3Uj3jxK5yh3kyjAnAqX2Y7F0spupcOTQxhKlIkX2u4i5gl0L9QJe0tKc/Ws9y95mpeQeZ1dAbMKBMVrVqqjrhNsVPGQO81MK+csWMkz9RTIVKCXzIAkhZSF5gRMnxBZ6tiai2sgke7y0E0kFUtr84YzLfF0wl9VBcIoSNiaLABK/+1C/pUhSQDNroVibiIZK8pC9TL29+SPq/kXm13pD51lTaHwFB1h87bHcC6b/uO2xe1WSrD6rVAiCqywXHOkfgAmKqayoPdJYv0Mv0mEBQMi4FCB2GD9WhmT+g4S/gCNhu3SxIhyBUzPIfRoMZCXw1pMDTJFfNUwe4gryNWEHxi+dBZblGpu3UnxIPtv7D+p1OajsqW2bCNVmOHB+fSb35tih3Ip/k0YdjIR8FIXUVFQhuy6imiAe7RjWCbl/Vde4BOWbtBYW0bykfdZdy0li5vSKeRBUxcwh3Az7X64O//mSVU4dbZvCtpPFgfnYSC9oM7CLpckRs6hasm7DIVQAGo8uyrcpCFz8/W4Ue3RzMhIwW6Y/81pRkWDb4cVt/yJvPEjG+6yPT+fvpYhM7SphHff690JHlU66+1KDEIWf/U5jU=
+
